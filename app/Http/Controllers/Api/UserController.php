@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,7 +14,11 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'            
+            'password' => ['required',
+            Password::min(6)
+            ->letters()
+            ->numbers()
+            ]            
         ]);
 
         $user = new User();
@@ -34,7 +38,7 @@ class UserController extends Controller
 
         $request->validate([
             "email" => "required|email",
-            "password" => "required"
+            "password" => "required|min:6|max:20"
         ]);
 
         $user = User::where("email", "=", $request->email)->first();
