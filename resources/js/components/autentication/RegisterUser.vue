@@ -80,7 +80,7 @@ export default {
     },
   }),
   methods: {
-    async registerUser() {
+    async registerUser() { //envia los datos del nuevo usuario para su validacion y registro en la base de datos del back
       await this.axios
         .post("/api/register", this.form)
         .then(
@@ -93,10 +93,10 @@ export default {
                 showConfirmButton: false,
                 timer: 1500,
               });
-              this.$router.push("loguin");
+              this.$router.push("loguin"); //refirige a iniciar sesion al registrarse
             }
           },
-          function (error) {
+          function (error) {//notifica las validaciones de formulario encontrados 
             let temp = "";
             if (error.response.data.errors.name != null)
               temp += error.response.data.errors.name + " ";

@@ -73,11 +73,11 @@ export default {
     count:""
   }),
   created() {
-    this.token = localStorage.getItem("token");
-    this.countFavorites()
+    this.token = localStorage.getItem("token");//asigna el  token de local storage a una variable local para comprobaciones
+    this.countFavorites() 
   },
   methods: {
-    async logout() {
+    async logout() { //metodo que se encarga de cerrar sesion y eliminar los token
         Swal.fire({
   title: 'Estas seguro?',
   text: "¿Deseas cerrar sesion?",
@@ -93,10 +93,10 @@ export default {
         .get("/api/logout")
         .then(
           (res) => {
-            localStorage.removeItem("token");
+            localStorage.removeItem("token");//elimina lo stoken y encabezados
             localStorage.setItem("token", "");
             this.token = "";
-            //  this.axios.defaults.headers.common['Authorization'] = '';
+            
             this.$router.push("/loguin");
           },
           function (error) {

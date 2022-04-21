@@ -58,7 +58,7 @@
 </template>
 <script>
 export default {
-  data: () => ({
+  data: () => ({//datos a nivel local que almacenan los datos de formulario para ser enviados al back para validar
     user: {},
     form: {
       email: "",
@@ -66,15 +66,15 @@ export default {
     },
   }),
   methods: {
-    async login() {
+    async login() {//metodo que envia los datos al back
       await this.axios
         .post("/api/login", this.form)
         .then(
           (res) => {
             if (res.data.status == 1) {
               this.axios.defaults.headers.common["Authorization"] =
-                "Bearer " + res.data.access_token;
-              localStorage.setItem("token", res.data.access_token);
+                "Bearer " + res.data.access_token; //asigna el token a encabezado de las consultas a la pai para la validacion
+              localStorage.setItem("token", res.data.access_token); //asigna el token creado para el usuario a una variable storage para usar en el front
               Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -82,7 +82,7 @@ export default {
                 showConfirmButton: false,
                 timer: 1500,
               });
-              this.$router.push("/");
+              this.$router.push("/"); //redirecciona al home al iniciar sesion
             } else {
               Swal.fire({
                 icon: "error",
@@ -91,7 +91,7 @@ export default {
               });
             }
           },
-          function (error) {
+          function (error) { //imprime los errores de formulario que el back encuentre
               let temp="";
               if(error.response.data.errors.email!=null)
               temp+= error.response.data.errors.email + " ";

@@ -173,6 +173,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      //establece variables locales en la vista
       pokemones: {},
       currentPage: 1,
       currentUrl: "/api/get-favorites",
@@ -181,6 +182,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   created: function created() {
+    //ejecuta un metodo al iniciar la vista
     this.getPokemonsFavorites();
   },
   methods: {
@@ -193,6 +195,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                //obtiene todos los pokemon de la lista de favoritos
                 vectorPokemon = [];
                 _context.next = 3;
                 return _this.axios.post(_this.currentUrl).then(function (res) {
@@ -201,8 +204,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this.previousUrl = res.data.data.prev_page_url;
                     console.log(res.data.data);
                     res.data.data.data.forEach(function (item) {
+                      //recorre la lista que obtuvo del back y solicita a la pai de pokemon por media del id mas informacion del pokemon 
                       _this.axios.get("https://pokeapi.co/api/v2/pokemon/" + item.pokemon_id).then(function (res2) {
-                        vectorPokemon.push(res2);
+                        vectorPokemon.push(res2); //guarda cada registro de pokemon en una lista temporal para asignarla a la lista principal y recorrerla en la vista
                       });
                     });
                   }
@@ -213,10 +217,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 3:
-                _this.pokemones = vectorPokemon;
-                console.log(_this.pokemones);
+                _this.pokemones = vectorPokemon; //se guarda la lista en la lista global.
 
-              case 5:
+              case 4:
               case "end":
                 return _context.stop();
             }
@@ -262,6 +265,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     nextPagination: function nextPagination() {
+      //se encarga de avanzar en la paginacion y mostrar mas registros
       if (this.nextUrl != null) {
         this.currentPage++;
         this.currentUrl = this.nextUrl;
@@ -269,6 +273,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     previousPagination: function previousPagination() {
+      //se encarga de retroceder en la paginacion y mostrar mas registros o registro previos
       if (this.previousUrl != null) {
         this.currentPage--;
         this.currentUrl = this.previousUrl;

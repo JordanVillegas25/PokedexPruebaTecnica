@@ -80,6 +80,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      //datos a nivel local que almacenan los datos de formulario para ser enviados al back para validar
       user: {},
       form: {
         email: "",
@@ -99,8 +100,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return _this.axios.post("/api/login", _this.form).then(function (res) {
                   if (res.data.status == 1) {
-                    _this.axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.access_token;
-                    localStorage.setItem("token", res.data.access_token);
+                    _this.axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.access_token; //asigna el token a encabezado de las consultas a la pai para la validacion
+
+                    //asigna el token a encabezado de las consultas a la pai para la validacion
+                    localStorage.setItem("token", res.data.access_token); //asigna el token creado para el usuario a una variable storage para usar en el front
+
+                    //asigna el token creado para el usuario a una variable storage para usar en el front
                     Swal.fire({
                       position: "top-end",
                       icon: "success",
@@ -109,7 +114,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       timer: 1500
                     });
 
-                    _this.$router.push("/");
+                    _this.$router.push("/"); //redirecciona al home al iniciar sesion
+
                   } else {
                     Swal.fire({
                       icon: "error",
@@ -118,6 +124,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     });
                   }
                 }, function (error) {
+                  //imprime los errores de formulario que el back encuentre
                   var temp = "";
                   if (error.response.data.errors.email != null) temp += error.response.data.errors.email + " ";
                   if (error.response.data.errors.password != null) temp += error.response.data.errors.password + " ";

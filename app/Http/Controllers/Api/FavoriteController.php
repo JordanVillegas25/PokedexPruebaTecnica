@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Favorite;
 class FavoriteController extends Controller
 {
-    
+    //metodo que obtiene los pokemones favoritos del usuario con sesion
     public function getFavorites(){
       
         $favorite = Favorite::where("user_id", "=",auth()->user()->id)->paginate(20);
@@ -16,6 +16,7 @@ class FavoriteController extends Controller
             "data" =>$favorite
         ]); 
     }
+     //metodo que devuelve la cantidad de pokemones en la tabla de favoritos del usuario
     public function getCountFavorites(){
       
         $favorite = Favorite::where("user_id", "=",auth()->user()->id)->count();
@@ -25,6 +26,7 @@ class FavoriteController extends Controller
             "count" =>$favorite
         ]); 
     }
+    //este metodo se encarga de guardar el id del pokemon junto con el del usuario en la tabla de favoritos
     public function registerFavorites(Request $request){
         if (Favorite::where('pokemon_id', '=', $request->pokemon_id)->where('user_id','=',auth()->user()->id)->exists()) {
             return response()->json([
@@ -42,6 +44,7 @@ class FavoriteController extends Controller
             "msj" => "se ha agregado a favoritos"
         ]); 
     }
+    //elimina el registro del pokemon en la lista de favoritos.
     public function deleteFavorites(Request $request){
      
      $favorite=Favorite::where('pokemon_id','=',$request->pokemon_id)->delete();

@@ -121,9 +121,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       timer: 1500
                     });
 
-                    _this.$router.push("loguin");
+                    _this.$router.push("loguin"); //refirige a iniciar sesion al registrarse
+
                   }
                 }, function (error) {
+                  //notifica las validaciones de formulario encontrados 
                   var temp = "";
                   if (error.response.data.errors.name != null) temp += error.response.data.errors.name + " ";
                   if (error.response.data.errors.email != null) temp += error.response.data.errors.email + " ";
