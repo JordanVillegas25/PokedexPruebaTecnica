@@ -23,7 +23,8 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::get('user-profile', [UserController::class, 'userProfile']);
     Route::get('logout', [UserController::class, 'logout']);
-
+   
+    Route::post('get-count-favorites',[FavoriteController::class, 'getCountFavorites']);
     Route::post('get-favorites',[FavoriteController::class, 'getFavorites']);
     Route::post('register-favorites',[FavoriteController::class, 'registerFavorites']);
     Route::post('delete-favorites',[FavoriteController::class, 'deleteFavorites']);

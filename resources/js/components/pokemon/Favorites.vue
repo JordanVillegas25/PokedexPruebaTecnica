@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="row">
+      <h1>Favoritos</h1>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div
         class="table--items products__list__item"
@@ -110,10 +114,10 @@
             <div class="card-footer">
               <button
                 href="#"
-                class="btn btn-primary"
-                @click="addFavoritePokemon(pokemon.data.id)"
+                class="btn btn-danger"
+                @click="deleteFavoritePokemon(pokemon.data.id)"
               >
-                <i class="far fa-heart"></i>
+                <i class="fas fa-heart"></i>
               </button>
             </div>
           </div>
@@ -149,43 +153,54 @@
 export default {
   data: () => ({
     pokemones: {},
-    countPagination: 1,
     currentPage: 1,
-    currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0",
+    currentUrl: "/api/get-favorites",
     nextUrl: "",
     previousUrl: "",
   }),
   created() {
-    this.getPokemons();
+    this.getPokemonsFavorites();
   },
   methods: {
-    async getPokemons() {
+    async getPokemonsFavorites() {
       let vectorPokemon = [];
 
-      await this.axios.get(this.currentUrl).then((all) => {
-        let { data } = all;
-        this.nextUrl = data.next;
-        this.previousUrl = data.previous;
-        //  console.log(this.pokemones);
-        data.results.forEach((item) => {
-          this.axios.get(item.url).then((res2) => {
-            vectorPokemon.push(res2);
-          });
+      await this.axios
+        .post(this.currentUrl)
+        .then(
+          (res) => {
+            if (res.data.status == 1) {
+              this.nextUrl = res.data.data.next_page_url;
+              this.previousUrl = res.data.data.prev_page_url;
+              console.log(res.data.data);
+              res.data.data.data.forEach((item) => {
+                this.axios
+                  .get("https://pokeapi.co/api/v2/pokemon/" + item.pokemon_id)
+                  .then((res2) => {
+                    vectorPokemon.push(res2);
+                  });
+              });
+            }
+          },
+          function (error) {
+            console.log(error.response.data);
+          }
+        )
+        .catch((err) => {
+          console.log("error" + err);
         });
-      });
+
       this.pokemones = vectorPokemon;
       console.log(this.pokemones);
     },
-    async addFavoritePokemon(idpokemon) {
+    async deleteFavoritePokemon(idpokemon) {
       await this.axios
-        .post("/api/register-favorites", { pokemon_id: idpokemon })
+        .post("/api/delete-favorites", { pokemon_id: idpokemon })
         .then(
           (res) => {
             if (res.data.status == 1) {
               alert(res.data.msj);
-            }
-            if (res.data.status == 0) {
-              alert(res.data.msj);
+              this.getPokemonsFavorites();
             }
           },
           function (error) {
@@ -201,7 +216,7 @@ export default {
         this.currentPage++;
 
         this.currentUrl = this.nextUrl;
-        this.getPokemons();
+        this.getPokemonsFavorites();
       }
     },
     previousPagination() {
@@ -209,7 +224,7 @@ export default {
         this.currentPage--;
 
         this.currentUrl = this.previousUrl;
-        this.getPokemons();
+        this.getPokemonsFavorites();
       }
     },
   },
