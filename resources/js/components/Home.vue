@@ -18,9 +18,11 @@
         >
           <h5
             class="card-title"
-            style="align-center; background-color:black;color:white"
+            style="align-center; background-color:black;color:white; padding-bottom: 5px;"
           >
-            {{ pokemon.data.name }}
+            <b>
+              {{ pokemon.data.name.toUpperCase() }}
+            </b>
           </h5>
           <img
             :src="pokemon.data.sprites.other.dream_world.front_default"
@@ -28,41 +30,118 @@
             style="height: 350px; width: 100%; border-radius: 5px"
             alt="..."
           />
-           <ul class="list-group list-group-flush">
-    <li class="list-group-item"> Experiencia base : {{ pokemon.data.base_experience }}</li>
-    <li class="list-group-item">  peso : {{ pokemon.data.weight }}Kilos</li>
-    <li class="list-group-item"> Abilidad Principal  : {{ pokemon.data.abilities[0].ability.name }}</li>
- 
-  </ul>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >Experiencia base :</label
+                >
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.base_experience }}</span
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >peso :</label
+                >
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.weight }}Kilos</span
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >Abilidad Principal :</label
+                >
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.abilities[0].ability.name }}</span
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >tipos :
+                </label>
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.types[0].type.name }}
+                    {{
+                      pokemon.data.types.length == 2
+                        ? ", " + pokemon.data.types[1].type.name
+                        : ""
+                    }}</span
+                  >
+                </div>
+              </div>
+            </li>
+          </ul>
           <div class="card-body">
-            <p class="card-text">
-            
-            </p>
-<div class="card-footer">
-            <button
-              href="#"
-              class="btn btn-primary"
-              @click="addFavoritePokemon(pokemon.data.id)"
-            >
-              <i class="far fa-heart"></i>
-            </button>
-</div>
+            <p class="card-text"></p>
+            <div class="card-footer">
+              <button
+                href="#"
+                class="btn btn-primary"
+                @click="addFavoritePokemon(pokemon.data.id)"
+              >
+                <i class="far fa-heart"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="row">
-        <nav aria-label="...">
-  <ul class="pagination pagination-lg">
-      {{countPaginatacion}}
-    <li class="page-item active" aria-current="page">
-      <span class="page-link">1</span>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-  </ul>
-</nav>
+      <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="#"
+              @click="previousPagination"
+              tabindex="-1"
+              aria-disabled="true"
+              >Previous</a
+            >
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#">{{ currentPage }}</a>
+          </li>
 
+          <li class="page-item">
+            <a class="page-link" @click="nextPagination" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
@@ -70,7 +149,11 @@
 export default {
   data: () => ({
     pokemones: {},
-    countPaginatacion:""
+    countPagination: 1,
+    currentPage: 1,
+    currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0",
+    nextUrl: "",
+    previousUrl: "",
   }),
   created() {
     this.getPokemons();
@@ -79,18 +162,17 @@ export default {
     async getPokemons() {
       let vectorPokemon = [];
 
-      await this.axios
-        .get("https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0")
-        .then((all) => {
-          let { data } = all;
-          this.countPaginatacion=Math.ceil(data.count/20);
-          //  console.log(this.pokemones);
-          data.results.forEach((item) => {
-            this.axios.get(item.url).then((res2) => {
-              vectorPokemon.push(res2);
-            });
+      await this.axios.get(this.currentUrl).then((all) => {
+        let { data } = all;
+        this.nextUrl = data.next;
+        this.previousUrl = data.previous;
+        //  console.log(this.pokemones);
+        data.results.forEach((item) => {
+          this.axios.get(item.url).then((res2) => {
+            vectorPokemon.push(res2);
           });
         });
+      });
       this.pokemones = vectorPokemon;
       console.log(this.pokemones);
     },
@@ -113,6 +195,22 @@ export default {
         .catch((err) => {
           console.log("error" + err);
         });
+    },
+    nextPagination() {
+      if (this.nextUrl != null) {
+        this.currentPage++;
+
+        this.currentUrl = this.nextUrl;
+        this.getPokemons();
+      }
+    },
+    previousPagination() {
+      if (this.previousUrl != null) {
+        this.currentPage--;
+
+        this.currentUrl = this.previousUrl;
+        this.getPokemons();
+      }
     },
   },
 };

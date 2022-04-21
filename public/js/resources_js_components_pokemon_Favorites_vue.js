@@ -78,10 +78,106 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      pokemones: {}
+      pokemones: {},
+      currentPage: 1,
+      currentUrl: "/api/get-favorites",
+      nextUrl: "",
+      previousUrl: ""
     };
   },
   created: function created() {
@@ -99,10 +195,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 vectorPokemon = [];
                 _context.next = 3;
-                return _this.axios.post("/api/get-favorites").then(function (res) {
+                return _this.axios.post(_this.currentUrl).then(function (res) {
                   if (res.data.status == 1) {
+                    _this.nextUrl = res.data.data.next_page_url;
+                    _this.previousUrl = res.data.data.prev_page_url;
                     console.log(res.data.data);
-                    res.data.data.forEach(function (item) {
+                    res.data.data.data.forEach(function (item) {
                       _this.axios.get("https://pokeapi.co/api/v2/pokemon/" + item.pokemon_id).then(function (res2) {
                         vectorPokemon.push(res2);
                       });
@@ -136,7 +234,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return _this2.axios.post("/api/delete-favorites", {
-                  "pokemon_id": idpokemon
+                  pokemon_id: idpokemon
                 }).then(function (res) {
                   if (res.data.status == 1) {
                     alert(res.data.msj);
@@ -156,6 +254,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee2);
       }))();
+    },
+    nextPagination: function nextPagination() {
+      if (this.nextUrl != null) {
+        this.currentPage++;
+        this.currentUrl = this.nextUrl;
+        this.getPokemonsFavorites();
+      }
+    },
+    previousPagination: function previousPagination() {
+      if (this.previousUrl != null) {
+        this.currentPage--;
+        this.currentUrl = this.previousUrl;
+        this.getPokemonsFavorites();
+      }
     }
   }
 });
@@ -280,14 +392,17 @@ var render = function () {
                     staticStyle: {
                       "background-color": "black",
                       color: "white",
+                      "padding-bottom": "5px",
                     },
                   },
                   [
-                    _vm._v(
-                      "\n            " +
-                        _vm._s(pokemon.data.name) +
-                        "\n          "
-                    ),
+                    _c("b", [
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(pokemon.data.name.toUpperCase()) +
+                          "\n          "
+                      ),
+                    ]),
                   ]
                 ),
                 _vm._v(" "),
@@ -306,21 +421,142 @@ var render = function () {
                 _vm._v(" "),
                 _c("ul", { staticClass: "list-group list-group-flush" }, [
                   _c("li", { staticClass: "list-group-item" }, [
-                    _vm._v(
-                      " Experiencia base : " +
-                        _vm._s(pokemon.data.base_experience)
-                    ),
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-sm-7 col-form-label",
+                          attrs: { for: "staticEmail" },
+                        },
+                        [_vm._v("Experiencia base :")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-5" }, [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "form-control-plaintext",
+                            attrs: {
+                              type: "text",
+                              readonly: "",
+                              id: "staticEmail",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(pokemon.data.base_experience)
+                            ),
+                          ]
+                        ),
+                      ]),
+                    ]),
                   ]),
                   _vm._v(" "),
                   _c("li", { staticClass: "list-group-item" }, [
-                    _vm._v("  peso : " + _vm._s(pokemon.data.weight) + "Kilos"),
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-sm-7 col-form-label",
+                          attrs: { for: "staticEmail" },
+                        },
+                        [_vm._v("peso :")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-5" }, [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "form-control-plaintext",
+                            attrs: {
+                              type: "text",
+                              readonly: "",
+                              id: "staticEmail",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(pokemon.data.weight) +
+                                "Kilos"
+                            ),
+                          ]
+                        ),
+                      ]),
+                    ]),
                   ]),
                   _vm._v(" "),
                   _c("li", { staticClass: "list-group-item" }, [
-                    _vm._v(
-                      " Abilidad Principal  : " +
-                        _vm._s(pokemon.data.abilities[0].ability.name)
-                    ),
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-sm-7 col-form-label",
+                          attrs: { for: "staticEmail" },
+                        },
+                        [_vm._v("Abilidad Principal :")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-5" }, [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "form-control-plaintext",
+                            attrs: {
+                              type: "text",
+                              readonly: "",
+                              id: "staticEmail",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(pokemon.data.abilities[0].ability.name)
+                            ),
+                          ]
+                        ),
+                      ]),
+                    ]),
+                  ]),
+                  _vm._v(" "),
+                  _c("li", { staticClass: "list-group-item" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "label",
+                        {
+                          staticClass: "col-sm-7 col-form-label",
+                          attrs: { for: "staticEmail" },
+                        },
+                        [_vm._v("tipos :\n              ")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-sm-5" }, [
+                        _c(
+                          "span",
+                          {
+                            staticClass: "form-control-plaintext",
+                            attrs: {
+                              type: "text",
+                              readonly: "",
+                              id: "staticEmail",
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(pokemon.data.types[0].type.name) +
+                                "\n                  " +
+                                _vm._s(
+                                  pokemon.data.types.length == 2
+                                    ? ", " + pokemon.data.types[1].type.name
+                                    : ""
+                                )
+                            ),
+                          ]
+                        ),
+                      ]),
+                    ]),
                   ]),
                 ]),
                 _vm._v(" "),
@@ -350,6 +586,42 @@ var render = function () {
       }),
       0
     ),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("nav", { attrs: { "aria-label": "..." } }, [
+        _c("ul", { staticClass: "pagination" }, [
+          _c("li", { staticClass: "page-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#", tabindex: "-1", "aria-disabled": "true" },
+                on: { click: _vm.previousPagination },
+              },
+              [_vm._v("Previous")]
+            ),
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "page-item" }, [
+            _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+              _vm._v(_vm._s(_vm.currentPage)),
+            ]),
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "page-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "page-link",
+                attrs: { href: "#" },
+                on: { click: _vm.nextPagination },
+              },
+              [_vm._v("Next")]
+            ),
+          ]),
+        ]),
+      ]),
+    ]),
   ])
 }
 var staticRenderFns = [

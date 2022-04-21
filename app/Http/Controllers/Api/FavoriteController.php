@@ -10,7 +10,7 @@ class FavoriteController extends Controller
     
     public function getFavorites(){
       
-        $favorite = Favorite::where("user_id", "=",auth()->user()->id)->get();
+        $favorite = Favorite::where("user_id", "=",auth()->user()->id)->paginate(20);
         return response()->json([
             "status" => 1,
             "data" =>$favorite

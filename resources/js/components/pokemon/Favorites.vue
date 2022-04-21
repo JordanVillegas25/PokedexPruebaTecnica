@@ -1,9 +1,9 @@
 <template>
   <div>
-      <div class="row">
- <h1>Favoritos</h1>
-      </div>
-     
+    <div class="row">
+      <h1>Favoritos</h1>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div
         class="table--items products__list__item"
@@ -22,9 +22,11 @@
         >
           <h5
             class="card-title"
-            style="align-center; background-color:black;color:white"
+            style="align-center; background-color:black;color:white; padding-bottom: 5px;"
           >
-            {{ pokemon.data.name }}
+            <b>
+              {{ pokemon.data.name.toUpperCase() }}
+            </b>
           </h5>
           <img
             :src="pokemon.data.sprites.other.dream_world.front_default"
@@ -32,28 +34,118 @@
             style="height: 350px; width: 100%; border-radius: 5px"
             alt="..."
           />
-             <ul class="list-group list-group-flush">
-    <li class="list-group-item"> Experiencia base : {{ pokemon.data.base_experience }}</li>
-    <li class="list-group-item">  peso : {{ pokemon.data.weight }}Kilos</li>
-    <li class="list-group-item"> Abilidad Principal  : {{ pokemon.data.abilities[0].ability.name }}</li>
- 
-  </ul>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >Experiencia base :</label
+                >
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.base_experience }}</span
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >peso :</label
+                >
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.weight }}Kilos</span
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >Abilidad Principal :</label
+                >
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.abilities[0].ability.name }}</span
+                  >
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <label for="staticEmail" class="col-sm-7 col-form-label"
+                  >tipos :
+                </label>
+                <div class="col-sm-5">
+                  <span
+                    type="text"
+                    readonly
+                    class="form-control-plaintext"
+                    id="staticEmail"
+                  >
+                    {{ pokemon.data.types[0].type.name }}
+                    {{
+                      pokemon.data.types.length == 2
+                        ? ", " + pokemon.data.types[1].type.name
+                        : ""
+                    }}</span
+                  >
+                </div>
+              </div>
+            </li>
+          </ul>
           <div class="card-body">
-            <p class="card-text">
-         
-            </p>
-<div class="card-footer">
-            <button
-              href="#"
-              class="btn btn-danger"
-              @click="deleteFavoritePokemon(pokemon.data.id)"
-            >
-              <i class="fas fa-heart"></i>
-            </button>
-</div>
+            <p class="card-text"></p>
+            <div class="card-footer">
+              <button
+                href="#"
+                class="btn btn-danger"
+                @click="deleteFavoritePokemon(pokemon.data.id)"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="row">
+      <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="#"
+              @click="previousPagination"
+              tabindex="-1"
+              aria-disabled="true"
+              >Previous</a
+            >
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#">{{ currentPage }}</a>
+          </li>
+
+          <li class="page-item">
+            <a class="page-link" @click="nextPagination" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
@@ -61,6 +153,10 @@
 export default {
   data: () => ({
     pokemones: {},
+    currentPage: 1,
+    currentUrl: "/api/get-favorites",
+    nextUrl: "",
+    previousUrl: "",
   }),
   created() {
     this.getPokemonsFavorites();
@@ -70,12 +166,14 @@ export default {
       let vectorPokemon = [];
 
       await this.axios
-        .post("/api/get-favorites")
+        .post(this.currentUrl)
         .then(
           (res) => {
             if (res.data.status == 1) {
+              this.nextUrl = res.data.data.next_page_url;
+              this.previousUrl = res.data.data.prev_page_url;
               console.log(res.data.data);
-              res.data.data.forEach((item) => {
+              res.data.data.data.forEach((item) => {
                 this.axios
                   .get("https://pokeapi.co/api/v2/pokemon/" + item.pokemon_id)
                   .then((res2) => {
@@ -97,7 +195,7 @@ export default {
     },
     async deleteFavoritePokemon(idpokemon) {
       await this.axios
-        .post("/api/delete-favorites", { "pokemon_id": idpokemon })
+        .post("/api/delete-favorites", { pokemon_id: idpokemon })
         .then(
           (res) => {
             if (res.data.status == 1) {
@@ -112,6 +210,22 @@ export default {
         .catch((err) => {
           console.log("error" + err);
         });
+    },
+    nextPagination() {
+      if (this.nextUrl != null) {
+        this.currentPage++;
+
+        this.currentUrl = this.nextUrl;
+        this.getPokemonsFavorites();
+      }
+    },
+    previousPagination() {
+      if (this.previousUrl != null) {
+        this.currentPage--;
+
+        this.currentUrl = this.previousUrl;
+        this.getPokemonsFavorites();
+      }
     },
   },
 };
