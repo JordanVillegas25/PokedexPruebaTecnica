@@ -35,12 +35,12 @@ class UserController extends Controller
 
 
     public function login(Request $request) {
-
+ 
         $request->validate([
             "email" => "required|email",
             "password" => "required|min:6|max:20"
         ]);
-
+ 
         $user = User::where("email", "=", $request->email)->first();
 
         if( isset($user->id) ){
@@ -52,19 +52,19 @@ class UserController extends Controller
                     "status" => 1,
                     "msg" => "¡Logueado exitosamente!",
                     "access_token" => $token
-                ]);        
+                ], 200);        
             }else{
                 return response()->json([
                     "status" => 0,
                     "msg" => "La Contraseña es incorrecta",
-                ], 404);    
+                ]);    
             }
 
         }else{
             return response()->json([
                 "status" => 0,
                 "msg" => "Usuario no registrado",
-            ], 404);  
+            ]);  
         }
     }
 
@@ -76,6 +76,13 @@ class UserController extends Controller
         ]); 
     }
 
+    public function getTokenUser(){
+       
+        return response()->json([
+            "status" => 1,
+            "token" => auth()->user()
+        ]);
+    }
     public function logout() {
         auth()->user()->tokens()->delete();
         
