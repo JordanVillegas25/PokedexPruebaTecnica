@@ -199,7 +199,13 @@ export default {
         .then(
           (res) => {
             if (res.data.status == 1) {
-              alert(res.data.msj);
+              Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: res.data.msj,
+                showConfirmButton: false,
+                timer: 1500,
+              });
               this.getPokemonsFavorites();
             }
           },

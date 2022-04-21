@@ -2274,21 +2274,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return _this.axios.get("/api/logout").then(function (res) {
-                  localStorage.removeItem("token");
-                  localStorage.setItem("token", "");
-                  _this.token = ""; //  this.axios.defaults.headers.common['Authorization'] = '';
+                Swal.fire({
+                  title: 'Estas seguro?',
+                  text: "¿Deseas cerrar sesion?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si!'
+                }).then(function (result) {
+                  if (result.isConfirmed) {
+                    _this.axios.get("/api/logout").then(function (res) {
+                      localStorage.removeItem("token");
+                      localStorage.setItem("token", "");
+                      _this.token = ""; //  this.axios.defaults.headers.common['Authorization'] = '';
 
-                  //  this.axios.defaults.headers.common['Authorization'] = '';
-                  _this.$router.push("/loguin");
-                }, function (error) {
-                  console.log(error.response.data);
-                })["catch"](function (err) {
-                  console.log("error" + err);
+                      _this.$router.push("/loguin");
+                    }, function (error) {
+                      console.log(error.response.data);
+                    })["catch"](function (err) {
+                      console.log("error" + err);
+                    });
+
+                    Swal.fire('sesion cerrada!', 'Esperamos verte pronto', 'success');
+                  }
                 });
 
-              case 2:
+              case 1:
               case "end":
                 return _context.stop();
             }

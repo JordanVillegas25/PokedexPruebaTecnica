@@ -237,7 +237,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   pokemon_id: idpokemon
                 }).then(function (res) {
                   if (res.data.status == 1) {
-                    alert(res.data.msj);
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "warning",
+                      title: res.data.msj,
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
 
                     _this2.getPokemonsFavorites();
                   }

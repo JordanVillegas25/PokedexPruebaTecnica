@@ -230,11 +230,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   pokemon_id: idpokemon
                 }).then(function (res) {
                   if (res.data.status == 1) {
-                    alert(res.data.msj);
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: res.data.msj,
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
                   }
 
                   if (res.data.status == 0) {
-                    alert(res.data.msj);
+                    Swal.fire({
+                      position: "top-center",
+                      icon: "info",
+                      title: "Ya tienes este pokemon, como favorito",
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
                   }
                 }, function (error) {
                   console.log(error.response.data);

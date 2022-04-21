@@ -78,7 +78,18 @@ export default {
   },
   methods: {
     async logout() {
-      await this.axios
+        Swal.fire({
+  title: 'Estas seguro?',
+  text: "¿Deseas cerrar sesion?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Si!'
+}).then((result) => {
+     
+  if (result.isConfirmed) {
+           this.axios
         .get("/api/logout")
         .then(
           (res) => {
@@ -95,6 +106,14 @@ export default {
         .catch((err) => {
           console.log("error" + err);
         });
+    Swal.fire(
+      'sesion cerrada!',
+      'Esperamos verte pronto',
+      'success'
+    )
+  }
+})
+ 
     },
     async countFavorites(){
         await this.axios
