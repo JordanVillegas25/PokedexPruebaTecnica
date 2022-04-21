@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\FavoriteController;
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
+Route::get('get-token', [UserController::class, 'getTokenUser']);
 
 Route::group(['middleware' => ["auth:sanctum"]], function () {
 
