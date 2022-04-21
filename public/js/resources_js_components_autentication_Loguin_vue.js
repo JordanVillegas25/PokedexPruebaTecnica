@@ -64,9 +64,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      //datos a nivel local que almacenan los datos de formulario para ser enviados al back para validar
       user: {},
       form: {
         email: "",
@@ -86,15 +100,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return _this.axios.post("/api/login", _this.form).then(function (res) {
                   if (res.data.status == 1) {
-                    _this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.access_token;
-                    localStorage.setItem('token', res.data.access_token);
+                    _this.axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.access_token; //asigna el token a encabezado de las consultas a la pai para la validacion
 
-                    _this.$router.push('/');
+                    //asigna el token a encabezado de las consultas a la pai para la validacion
+                    localStorage.setItem("token", res.data.access_token); //asigna el token creado para el usuario a una variable storage para usar en el front
+
+                    //asigna el token creado para el usuario a una variable storage para usar en el front
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: "Iniciando sesion",
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+
+                    _this.$router.push("/"); //redirecciona al home al iniciar sesion
+
                   } else {
-                    console.log(res.data);
+                    Swal.fire({
+                      icon: "error",
+                      title: "Error en credenciales",
+                      text: res.data.msg
+                    });
                   }
                 }, function (error) {
-                  console.log(error.response.data);
+                  //imprime los errores de formulario que el back encuentre
+                  var temp = "";
+                  if (error.response.data.errors.email != null) temp += error.response.data.errors.email + " ";
+                  if (error.response.data.errors.password != null) temp += error.response.data.errors.password + " ";
+                  Swal.fire({
+                    icon: "error",
+                    title: "Error en credenciales",
+                    text: temp
+                  });
                 })["catch"](function (err) {
                   console.log("error" + err);
                 });
@@ -197,117 +235,143 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "form",
-      {
-        on: {
-          submit: function ($event) {
-            $event.preventDefault()
-            return _vm.login.apply(null, arguments)
-          },
-        },
-      },
-      [
-        _c("div", { staticClass: "mb-3 row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-sm-2 col-form-label",
-              attrs: { for: "staticEmail" },
-            },
-            [_vm._v("Email")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-10" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.email,
-                  expression: "form.email",
-                },
-              ],
-              staticClass: "form-control-plaintext",
-              attrs: {
-                type: "text",
-                id: "staticEmail",
-                value: "email@example.com",
-              },
-              domProps: { value: _vm.form.email },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "email", $event.target.value)
-                },
-              },
-            }),
-          ]),
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "mb-3 row" }, [
-          _c(
-            "label",
-            {
-              staticClass: "col-sm-2 col-form-label",
-              attrs: { for: "inputPassword" },
-            },
-            [_vm._v("Password")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-10" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.password,
-                  expression: "form.password",
-                },
-              ],
-              staticClass: "form-control",
-              attrs: { type: "password", id: "inputPassword" },
-              domProps: { value: _vm.form.password },
-              on: {
-                input: function ($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.form, "password", $event.target.value)
-                },
-              },
-            }),
-          ]),
-        ]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn btn-primary" }, [_vm._v("Enviar")]),
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "mb-3 row" }, [
-      _c("div", { staticClass: "col-sm-1" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-3" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-6" }, [
         _c(
-          "a",
-          { staticClass: "btn-light" },
-          [
-            _c(
-              "router-link",
-              {
-                staticClass: "nav-link",
-                attrs: { "exact-active-class": "active", to: "/registerUser" },
+          "form",
+          {
+            on: {
+              submit: function ($event) {
+                $event.preventDefault()
+                return _vm.login.apply(null, arguments)
               },
-              [_vm._v("Registro")]
-            ),
-          ],
-          1
+            },
+          },
+          [
+            _c("div", { staticClass: "mb-3 row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-sm-2 col-form-label",
+                  attrs: { for: "staticEmail" },
+                },
+                [_vm._v("Email")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-10" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.email,
+                      expression: "form.email",
+                    },
+                  ],
+                  staticClass: "form-control-plaintext",
+                  attrs: {
+                    type: "text",
+                    id: "staticEmail",
+                    placeholder: "email@example.com",
+                  },
+                  domProps: { value: _vm.form.email },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "email", $event.target.value)
+                    },
+                  },
+                }),
+              ]),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "mb-3 row" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "col-sm-2 col-form-label",
+                  attrs: { for: "inputPassword" },
+                },
+                [_vm._v("Contraseña")]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-sm-10" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.password,
+                      expression: "form.password",
+                    },
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "password", id: "inputPassword" },
+                  domProps: { value: _vm.form.password },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "password", $event.target.value)
+                    },
+                  },
+                }),
+              ]),
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+          ]
         ),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-3 row" }, [
+          _c("div", { staticClass: "col-sm-12 card-footer" }, [
+            _c(
+              "a",
+              { staticClass: "btn-light" },
+              [
+                _c(
+                  "router-link",
+                  {
+                    staticClass: "nav-link logoutbutton",
+                    attrs: {
+                      "exact-active-class": "active",
+                      to: "/registerUser",
+                    },
+                  },
+                  [_vm._v("Registro")]
+                ),
+              ],
+              1
+            ),
+          ]),
+        ]),
       ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-3" }),
     ]),
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-sm-5" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-3" }, [
+        _c("button", { staticClass: "btn btn-light" }, [_vm._v("Enviar")]),
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-3" }),
+    ])
+  },
+]
 render._withStripped = true
 
 

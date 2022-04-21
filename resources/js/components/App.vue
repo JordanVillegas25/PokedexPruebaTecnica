@@ -73,19 +73,30 @@ export default {
     count:""
   }),
   created() {
-    this.token = localStorage.getItem("token");
-    this.countFavorites()
+    this.token = localStorage.getItem("token");//asigna el  token de local storage a una variable local para comprobaciones
+    this.countFavorites() 
   },
   methods: {
-    async logout() {
-      await this.axios
+    async logout() { //metodo que se encarga de cerrar sesion y eliminar los token
+        Swal.fire({
+  title: 'Estas seguro?',
+  text: "¿Deseas cerrar sesion?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: 'Si!'
+}).then((result) => {
+     
+  if (result.isConfirmed) {
+           this.axios
         .get("/api/logout")
         .then(
           (res) => {
-            localStorage.removeItem("token");
+            localStorage.removeItem("token");//elimina lo stoken y encabezados
             localStorage.setItem("token", "");
             this.token = "";
-            //  this.axios.defaults.headers.common['Authorization'] = '';
+            
             this.$router.push("/loguin");
           },
           function (error) {
@@ -95,6 +106,14 @@ export default {
         .catch((err) => {
           console.log("error" + err);
         });
+    Swal.fire(
+      'sesion cerrada!',
+      'Esperamos verte pronto',
+      'success'
+    )
+  }
+})
+ 
     },
     async countFavorites(){
         await this.axios

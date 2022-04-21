@@ -151,7 +151,7 @@ export default {
     pokemones: {},
     countPagination: 1,
     currentPage: 1,
-    currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0",
+    currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0", //guarda la ruta principal de conexion a la api
     nextUrl: "",
     previousUrl: "",
   }),
@@ -159,33 +159,45 @@ export default {
     this.getPokemons();
   },
   methods: {
-    async getPokemons() {
+    async getPokemons() { //conecta con la api y obtienelos registros de pokemon
       let vectorPokemon = [];
 
-      await this.axios.get(this.currentUrl).then((all) => {
+      await this.axios.get(this.currentUrl).then((all) => {//ejecuta la conexion a la api con una url dinamica
         let { data } = all;
-        this.nextUrl = data.next;
+        this.nextUrl = data.next; //asigna las nuevas rutas siguientes y anteriores para la paginacion
         this.previousUrl = data.previous;
         //  console.log(this.pokemones);
-        data.results.forEach((item) => {
+        data.results.forEach((item) => { //recorre cada pokemon de la lista principal y hace una nueva solicitud por los datos de cada pokemon
           this.axios.get(item.url).then((res2) => {
-            vectorPokemon.push(res2);
+            vectorPokemon.push(res2); //inserta los datos en una lista temporal 
           });
         });
       });
       this.pokemones = vectorPokemon;
       console.log(this.pokemones);
     },
-    async addFavoritePokemon(idpokemon) {
+    async addFavoritePokemon(idpokemon) { //agrega un nuevo registro de favorito del cliente 
       await this.axios
         .post("/api/register-favorites", { pokemon_id: idpokemon })
         .then(
           (res) => {
             if (res.data.status == 1) {
-              alert(res.data.msj);
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: res.data.msj,
+                showConfirmButton: false,
+                timer: 1500,
+              });
             }
             if (res.data.status == 0) {
-              alert(res.data.msj);
+              Swal.fire({
+                position: "top-center",
+                icon: "info",
+                title: "Ya tienes este pokemon, como favorito",
+                showConfirmButton: false,
+                timer: 1500,
+              });
             }
           },
           function (error) {
@@ -196,7 +208,7 @@ export default {
           console.log("error" + err);
         });
     },
-    nextPagination() {
+    nextPagination() {//actualiza las rutas tanto la actual como la siguiente y la enterior
       if (this.nextUrl != null) {
         this.currentPage++;
 

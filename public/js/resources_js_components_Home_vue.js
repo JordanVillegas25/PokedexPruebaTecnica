@@ -173,6 +173,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       countPagination: 1,
       currentPage: 1,
       currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0",
+      //guarda la ruta principal de conexion a la api
       nextUrl: "",
       previousUrl: ""
     };
@@ -190,17 +191,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                //conecta con la api y obtienelos registros de pokemon
                 vectorPokemon = [];
                 _context.next = 3;
                 return _this.axios.get(_this.currentUrl).then(function (all) {
+                  //ejecuta la conexion a la api con una url dinamica
                   var data = all.data;
-                  _this.nextUrl = data.next;
+                  _this.nextUrl = data.next; //asigna las nuevas rutas siguientes y anteriores para la paginacion
+
+                  //asigna las nuevas rutas siguientes y anteriores para la paginacion
                   _this.previousUrl = data.previous; //  console.log(this.pokemones);
 
                   //  console.log(this.pokemones);
                   data.results.forEach(function (item) {
+                    //recorre cada pokemon de la lista principal y hace una nueva solicitud por los datos de cada pokemon
                     _this.axios.get(item.url).then(function (res2) {
-                      vectorPokemon.push(res2);
+                      vectorPokemon.push(res2); //inserta los datos en una lista temporal 
                     });
                   });
                 });
@@ -230,11 +236,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   pokemon_id: idpokemon
                 }).then(function (res) {
                   if (res.data.status == 1) {
-                    alert(res.data.msj);
+                    Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: res.data.msj,
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
                   }
 
                   if (res.data.status == 0) {
-                    alert(res.data.msj);
+                    Swal.fire({
+                      position: "top-center",
+                      icon: "info",
+                      title: "Ya tienes este pokemon, como favorito",
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
                   }
                 }, function (error) {
                   console.log(error.response.data);
@@ -251,6 +269,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     nextPagination: function nextPagination() {
+      //actualiza las rutas tanto la actual como la siguiente y la enterior
       if (this.nextUrl != null) {
         this.currentPage++;
         this.currentUrl = this.nextUrl;

@@ -2262,7 +2262,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   created: function created() {
-    this.token = localStorage.getItem("token");
+    this.token = localStorage.getItem("token"); //asigna el  token de local storage a una variable local para comprobaciones
+
     this.countFavorites();
   },
   methods: {
@@ -2274,21 +2275,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return _this.axios.get("/api/logout").then(function (res) {
-                  localStorage.removeItem("token");
-                  localStorage.setItem("token", "");
-                  _this.token = ""; //  this.axios.defaults.headers.common['Authorization'] = '';
+                //metodo que se encarga de cerrar sesion y eliminar los token
+                Swal.fire({
+                  title: 'Estas seguro?',
+                  text: "¿Deseas cerrar sesion?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si!'
+                }).then(function (result) {
+                  if (result.isConfirmed) {
+                    _this.axios.get("/api/logout").then(function (res) {
+                      localStorage.removeItem("token"); //elimina lo stoken y encabezados
 
-                  //  this.axios.defaults.headers.common['Authorization'] = '';
-                  _this.$router.push("/loguin");
-                }, function (error) {
-                  console.log(error.response.data);
-                })["catch"](function (err) {
-                  console.log("error" + err);
+                      localStorage.setItem("token", "");
+                      _this.token = "";
+
+                      _this.$router.push("/loguin");
+                    }, function (error) {
+                      console.log(error.response.data);
+                    })["catch"](function (err) {
+                      console.log("error" + err);
+                    });
+
+                    Swal.fire('sesion cerrada!', 'Esperamos verte pronto', 'success');
+                  }
                 });
 
-              case 2:
+              case 1:
               case "end":
                 return _context.stop();
             }
@@ -2430,7 +2445,8 @@ var FavoritePokemon = function FavoritePokemon() {
   return __webpack_require__.e(/*! import() */ "resources_js_components_pokemon_Favorites_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/pokemon/Favorites.vue */ "./resources/js/components/pokemon/Favorites.vue"));
 };
 
-var routes = [{
+var routes = [//realiza el enrutamiento e importacion de los componentes para poder ser accedidos por los demas componentes
+{
   name: 'home',
   path: '/',
   component: Home

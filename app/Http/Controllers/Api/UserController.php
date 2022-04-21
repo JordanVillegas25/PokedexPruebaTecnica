@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    //registro de usuarios en el sistema se comprueba los campos y lse agrega validaciones de contraseñas
     public function register(Request $request) {
         $request->validate([
             'name' => 'required',
@@ -33,7 +34,7 @@ class UserController extends Controller
         ]);    
     }
 
-
+//metodo que se encarga de realizar el loguin por metodo post realiza validaciones
     public function login(Request $request) {
  
         $request->validate([
@@ -44,10 +45,11 @@ class UserController extends Controller
         $user = User::where("email", "=", $request->email)->first();
 
         if( isset($user->id) ){
-            if(Hash::check($request->password, $user->password)){
-                //creamos el token
-                $token = $user->createToken("auth_token")->plainTextToken;
-                //si está todo ok
+            if(Hash::check($request->password, $user->password)){ //valida las contraseña encriptada y la ingresada
+             
+                $token = $user->createToken("auth_token")->plainTextToken; // crea un token para el usuario que envia al front end para acceder al usuario de manera encriptada
+               
+                //si está todo ok devuelve el token que tambien servira para validar las peticiones al servidor
                 return response()->json([
                     "status" => 1,
                     "msg" => "¡Logueado exitosamente!",
@@ -67,7 +69,7 @@ class UserController extends Controller
             ]);  
         }
     }
-
+    //devuelve informacion del perfil del usuario
     public function userProfile() {
         return response()->json([
             "status" => 0,
@@ -76,6 +78,7 @@ class UserController extends Controller
         ]); 
     }
 
+    //obtiene el token del usuarioactualmente logueado
     public function getTokenUser(){
        
         return response()->json([
@@ -83,6 +86,7 @@ class UserController extends Controller
             "token" => auth()->user()
         ]);
     }
+    //metodo que se encarga de eliminar tokens y cerrar la sesion del usuario
     public function logout() {
         auth()->user()->tokens()->delete();
         
