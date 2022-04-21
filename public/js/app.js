@@ -2221,15 +2221,49 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       user: {},
-      token: ""
+      token: "",
+      count: ""
     };
   },
   created: function created() {
     this.token = localStorage.getItem("token");
+    this.countFavorites();
   },
   methods: {
     logout: function logout() {
@@ -2243,11 +2277,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return _this.axios.get("/api/logout").then(function (res) {
                   localStorage.removeItem("token");
-                  localStorage.setItem("token", '');
-                  _this.token = ''; //  this.axios.defaults.headers.common['Authorization'] = '';
+                  localStorage.setItem("token", "");
+                  _this.token = ""; //  this.axios.defaults.headers.common['Authorization'] = '';
 
                   //  this.axios.defaults.headers.common['Authorization'] = '';
-                  _this.$router.push('/loguin');
+                  _this.$router.push("/loguin");
                 }, function (error) {
                   console.log(error.response.data);
                 })["catch"](function (err) {
@@ -2260,6 +2294,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee);
+      }))();
+    },
+    countFavorites: function countFavorites() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this2.axios.post("/api/get-count-favorites").then(function (res) {
+                  console.log(res.data.count);
+                  _this2.count = res.data.count; //  this.axios.defaults.headers.common['Authorization'] = '';
+                })["catch"](function (err) {
+                  console.log("error" + err);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     }
   }
@@ -2368,6 +2426,10 @@ var Loguin = function Loguin() {
   return __webpack_require__.e(/*! import() */ "resources_js_components_autentication_Loguin_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/autentication/Loguin.vue */ "./resources/js/components/autentication/Loguin.vue"));
 };
 
+var FavoritePokemon = function FavoritePokemon() {
+  return __webpack_require__.e(/*! import() */ "resources_js_components_pokemon_Favorites_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/pokemon/Favorites.vue */ "./resources/js/components/pokemon/Favorites.vue"));
+};
+
 var routes = [{
   name: 'home',
   path: '/',
@@ -2380,6 +2442,10 @@ var routes = [{
   name: 'loguin',
   path: '/loguin',
   component: Loguin
+}, {
+  name: 'favoritepokemon',
+  path: '/favoritepokemon',
+  component: FavoritePokemon
 }];
 
 /***/ }),
@@ -20670,7 +20736,9 @@ var render = function () {
   return _c("main", [
     _c(
       "nav",
-      { staticClass: "navbar navbar-expand-lg navbar-light bg-light" },
+      {
+        staticClass: "navbar navbar-expand-lg navbar-light bg-light sticky-top",
+      },
       [
         _c("div", { staticClass: "container-fluid" }, [
           _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
@@ -20714,13 +20782,41 @@ var render = function () {
                 _vm._v(" "),
                 _c(
                   "li",
+                  {
+                    staticClass: "nav-item",
+                    attrs: { "aria-current": "page" },
+                  },
+                  [
+                    _vm.token != ""
+                      ? _c(
+                          "router-link",
+                          {
+                            staticClass: "nav-link ",
+                            attrs: {
+                              "exact-active-class": "active",
+                              to: "/favoritepokemon",
+                              "aria-current": "page",
+                            },
+                          },
+                          [
+                            _vm._v("Pokemon Favoritos "),
+                            _c("b", [_vm._v(_vm._s(_vm.count))]),
+                          ]
+                        )
+                      : _vm._e(),
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "li",
                   { staticClass: "nav-item" },
                   [
                     _vm.token == ""
                       ? _c(
                           "router-link",
                           {
-                            staticClass: "nav-link ",
+                            staticClass: "nav-link",
                             attrs: {
                               "exact-active-class": "active",
                               to: "/loguin",
@@ -20733,16 +20829,16 @@ var render = function () {
                   1
                 ),
                 _vm._v(" "),
-                _c("li", { staticClass: "nav-item" }, [
+                _c("li", { staticClass: "nav-item logoutbutton" }, [
                   _vm.token != ""
                     ? _c(
                         "button",
                         {
-                          staticClass: "nav-link ",
+                          staticClass: "nav-link logoutbutton",
                           attrs: { "exact-active-class": "active" },
                           on: { click: _vm.logout },
                         },
-                        [_vm._v("Logout")]
+                        [_vm._v("\n               Logout\n             ")]
                       )
                     : _vm._e(),
                 ]),
@@ -35686,7 +35782,7 @@ Vue.compile = compileToFunctions;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_components_Home_vue":1,"resources_js_components_autentication_RegisterUser_vue":1,"resources_js_components_autentication_Loguin_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_components_Home_vue":1,"resources_js_components_autentication_RegisterUser_vue":1,"resources_js_components_autentication_Loguin_vue":1,"resources_js_components_pokemon_Favorites_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

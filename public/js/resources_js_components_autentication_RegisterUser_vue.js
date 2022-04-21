@@ -45,6 +45,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -67,7 +85,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return _this.axios.post("/api/register", _this.form).then(function (res) {
                   if (res.data.status == 1) {
-                    _this.$router.push('loguin');
+                    _this.$router.push("loguin");
                   }
                 }, function (error) {
                   console.log(error.response.data);
