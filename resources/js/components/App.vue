@@ -93,7 +93,7 @@ export default {
         .get("/api/logout")
         .then(
           (res) => {
-            localStorage.removeItem("token");//elimina lo stoken y encabezados
+            localStorage.removeItem("token");//elimina los token y encabezados
             localStorage.setItem("token", "");
             this.token = "";
             
