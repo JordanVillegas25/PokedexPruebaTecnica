@@ -204,7 +204,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this.previousUrl = res.data.data.prev_page_url;
                     console.log(res.data.data);
                     res.data.data.data.forEach(function (item) {
-                      //recorre la lista que obtuvo del back y solicita a la pai de pokemon por media del id mas informacion del pokemon 
+                      //recorre la lista que obtuvo del back y solicita a la pai de pokemon por media del id mas informacion del pokemon
                       _this.axios.get("https://pokeapi.co/api/v2/pokemon/" + item.pokemon_id).then(function (res2) {
                         vectorPokemon.push(res2); //guarda cada registro de pokemon en una lista temporal para asignarla a la lista principal y recorrerla en la vista
                       });
@@ -425,7 +425,8 @@ var render = function () {
                     "border-radius": "5px",
                   },
                   attrs: {
-                    src: pokemon.data.sprites.other.dream_world.front_default,
+                    src: pokemon.data.sprites.other["official-artwork"]
+                      .front_default,
                     alt: "...",
                   },
                 }),

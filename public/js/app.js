@@ -2277,13 +2277,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 //metodo que se encarga de cerrar sesion y eliminar los token
                 Swal.fire({
-                  title: 'Estas seguro?',
+                  title: "Estas seguro?",
                   text: "¿Deseas cerrar sesion?",
-                  icon: 'warning',
+                  icon: "warning",
                   showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Si!'
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Si!"
                 }).then(function (result) {
                   if (result.isConfirmed) {
                     _this.axios.get("/api/logout").then(function (res) {
@@ -2299,7 +2299,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       console.log("error" + err);
                     });
 
-                    Swal.fire('sesion cerrada!', 'Esperamos verte pronto', 'success');
+                    Swal.fire("sesion cerrada!", "Esperamos verte pronto", "success");
                   }
                 });
 
@@ -20807,7 +20807,7 @@ var render = function () {
                       ? _c(
                           "router-link",
                           {
-                            staticClass: "nav-link ",
+                            staticClass: "nav-link",
                             attrs: {
                               "exact-active-class": "active",
                               to: "/favoritepokemon",
@@ -20854,7 +20854,7 @@ var render = function () {
                           attrs: { "exact-active-class": "active" },
                           on: { click: _vm.logout },
                         },
-                        [_vm._v("\n               Logout\n             ")]
+                        [_vm._v("\n              Logout\n            ")]
                       )
                     : _vm._e(),
                 ]),
