@@ -166,16 +166,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       pokemones: {},
       countPagination: 1,
       currentPage: 1,
-      currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0",
+      currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=6&offset=0",
       //guarda la ruta principal de conexion a la api
       nextUrl: "",
-      previousUrl: ""
+      previousUrl: "",
+      form: {
+        search: ""
+      }
     };
   },
   created: function created() {
@@ -206,7 +223,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   data.results.forEach(function (item) {
                     //recorre cada pokemon de la lista principal y hace una nueva solicitud por los datos de cada pokemon
                     _this.axios.get(item.url).then(function (res2) {
-                      vectorPokemon.push(res2); //inserta los datos en una lista temporal 
+                      vectorPokemon.push(res2); //inserta los datos en una lista temporal
                     });
                   });
                 });
@@ -282,6 +299,52 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.currentUrl = this.previousUrl;
         this.getPokemons();
       }
+    },
+    searchPokemon: function searchPokemon() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var vectorPokemon;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                vectorPokemon = [];
+
+                if (!(_this3.form.search != "")) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                _context3.next = 4;
+                return _this3.axios.get("https://pokeapi.co/api/v2/pokemon/" + _this3.form.search.toLowerCase()).then(function (res) {
+                  vectorPokemon.push(res);
+                  console.log(_this3.pokemones);
+                  _this3.pokemones = vectorPokemon;
+                })["catch"](function (err) {
+                  Swal.fire({
+                    position: "top-center",
+                    icon: "info",
+                    title: "Sin registros",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                });
+
+              case 4:
+                _context3.next = 7;
+                break;
+
+              case 6:
+                _this3.getPokemons();
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     }
   }
 });
@@ -372,269 +435,329 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "row row-cols-1 row-cols-md-3 g-4" },
-      _vm._l(_vm.pokemones, function (pokemon) {
-        return _c(
-          "div",
+  return _c(
+    "div",
+    { staticClass: "row", staticStyle: { "margin-top": "-15px" } },
+    [
+      _c("div", { staticClass: "col-sm-3" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-5" }, [
+        _c(
+          "form",
           {
-            key: pokemon.data.id,
-            staticClass: "table--items products__list__item",
+            staticClass: "d-flex",
+            on: {
+              submit: function ($event) {
+                $event.preventDefault()
+                return _vm.searchPokemon.apply(null, arguments)
+              },
+            },
           },
           [
-            _c(
-              "div",
-              {
-                staticClass: "card text-center",
-                staticStyle: {
-                  "max-width": "300px",
-                  "min-height": "350px",
-                  "border-radius": "15px",
-                  "margin-bottom": "10px",
-                  "background-color": "white",
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.search,
+                  expression: "form.search",
+                },
+              ],
+              staticClass: "form-control me-2",
+              attrs: {
+                type: "search",
+                placeholder: "Nombre de pokemon o numero pokedex",
+                "aria-label": "Search",
+              },
+              domProps: { value: _vm.form.search },
+              on: {
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "search", $event.target.value)
                 },
               },
-              [
-                _c(
-                  "h5",
-                  {
-                    staticClass: "card-title",
-                    staticStyle: {
-                      "background-color": "black",
-                      color: "white",
-                      "padding-bottom": "5px",
-                    },
-                  },
-                  [
-                    _c("b", [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(pokemon.data.name.toUpperCase()) +
-                          "\n          "
-                      ),
-                    ]),
-                  ]
-                ),
-                _vm._v(" "),
-                _c("img", {
-                  staticClass: "card-img-top",
-                  staticStyle: {
-                    height: "350px",
-                    width: "100%",
-                    "border-radius": "5px",
-                  },
-                  attrs: {
-                    src: pokemon.data.sprites.other.dream_world.front_default,
-                    alt: "...",
-                  },
-                }),
-                _vm._v(" "),
-                _c("ul", { staticClass: "list-group list-group-flush" }, [
-                  _c("li", { staticClass: "list-group-item" }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "col-sm-7 col-form-label",
-                          attrs: { for: "staticEmail" },
-                        },
-                        [_vm._v("Experiencia base :")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-5" }, [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "form-control-plaintext",
-                            attrs: {
-                              type: "text",
-                              readonly: "",
-                              id: "staticEmail",
-                            },
-                          },
-                          [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(pokemon.data.base_experience)
-                            ),
-                          ]
-                        ),
-                      ]),
-                    ]),
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "list-group-item" }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "col-sm-7 col-form-label",
-                          attrs: { for: "staticEmail" },
-                        },
-                        [_vm._v("peso :")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-5" }, [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "form-control-plaintext",
-                            attrs: {
-                              type: "text",
-                              readonly: "",
-                              id: "staticEmail",
-                            },
-                          },
-                          [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(pokemon.data.weight) +
-                                "Kilos"
-                            ),
-                          ]
-                        ),
-                      ]),
-                    ]),
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "list-group-item" }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "col-sm-7 col-form-label",
-                          attrs: { for: "staticEmail" },
-                        },
-                        [_vm._v("Abilidad Principal :")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-5" }, [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "form-control-plaintext",
-                            attrs: {
-                              type: "text",
-                              readonly: "",
-                              id: "staticEmail",
-                            },
-                          },
-                          [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(pokemon.data.abilities[0].ability.name)
-                            ),
-                          ]
-                        ),
-                      ]),
-                    ]),
-                  ]),
-                  _vm._v(" "),
-                  _c("li", { staticClass: "list-group-item" }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "label",
-                        {
-                          staticClass: "col-sm-7 col-form-label",
-                          attrs: { for: "staticEmail" },
-                        },
-                        [_vm._v("tipos :\n              ")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-sm-5" }, [
-                        _c(
-                          "span",
-                          {
-                            staticClass: "form-control-plaintext",
-                            attrs: {
-                              type: "text",
-                              readonly: "",
-                              id: "staticEmail",
-                            },
-                          },
-                          [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(pokemon.data.types[0].type.name) +
-                                "\n                  " +
-                                _vm._s(
-                                  pokemon.data.types.length == 2
-                                    ? ", " + pokemon.data.types[1].type.name
-                                    : ""
-                                )
-                            ),
-                          ]
-                        ),
-                      ]),
-                    ]),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "card-body" }, [
-                  _c("p", { staticClass: "card-text" }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-footer" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function ($event) {
-                            return _vm.addFavoritePokemon(pokemon.data.id)
-                          },
-                        },
-                      },
-                      [_c("i", { staticClass: "far fa-heart" })]
-                    ),
-                  ]),
-                ]),
-              ]
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-outline-success",
+                attrs: { type: "submit" },
+              },
+              [_vm._v("Buscar")]
             ),
           ]
-        )
-      }),
-      0
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("nav", { attrs: { "aria-label": "..." } }, [
-        _c("ul", { staticClass: "pagination" }, [
-          _c("li", { staticClass: "page-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "page-link",
-                attrs: { href: "#", tabindex: "-1", "aria-disabled": "true" },
-                on: { click: _vm.previousPagination },
-              },
-              [_vm._v("Previous")]
-            ),
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "page-item" }, [
-            _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-              _vm._v(_vm._s(_vm.currentPage)),
+        ),
+      ]),
+      _vm._v(" "),
+      _c("div"),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "row row-cols-1 row-cols-md-3 g-4" },
+        _vm._l(_vm.pokemones, function (pokemon) {
+          return _c(
+            "div",
+            {
+              key: pokemon.data.id,
+              staticClass: "table--items products__list__item",
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass: "card text-center",
+                  staticStyle: {
+                    "max-width": "300px",
+                    "min-height": "350px",
+                    "border-radius": "15px",
+                    "margin-bottom": "10px",
+                    "background-color": "white",
+                  },
+                },
+                [
+                  _c(
+                    "h5",
+                    {
+                      staticClass: "card-title",
+                      staticStyle: {
+                        "background-color": "black",
+                        color: "white",
+                        "padding-bottom": "5px",
+                      },
+                    },
+                    [
+                      _c("b", [
+                        _vm._v(
+                          "\n            " +
+                            _vm._s(pokemon.data.name.toUpperCase()) +
+                            "\n          "
+                        ),
+                      ]),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("img", {
+                    staticClass: "card-img-top",
+                    staticStyle: {
+                      height: "350px",
+                      width: "100%",
+                      "border-radius": "5px",
+                    },
+                    attrs: {
+                      src: pokemon.data.sprites.other["official-artwork"]
+                        .front_default,
+                      alt: "Sin imagen en los registros",
+                    },
+                  }),
+                  _vm._v(" "),
+                  _c("ul", { staticClass: "list-group list-group-flush" }, [
+                    _c("li", { staticClass: "list-group-item" }, [
+                      _c("div", { staticClass: "row" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-sm-7 col-form-label",
+                            attrs: { for: "staticEmail" },
+                          },
+                          [_vm._v("Experiencia base :")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-sm-5" }, [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "form-control-plaintext",
+                              attrs: {
+                                type: "text",
+                                readonly: "",
+                                id: "staticEmail",
+                              },
+                            },
+                            [
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(pokemon.data.base_experience)
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("li", { staticClass: "list-group-item" }, [
+                      _c("div", { staticClass: "row" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-sm-7 col-form-label",
+                            attrs: { for: "staticEmail" },
+                          },
+                          [_vm._v("peso :")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-sm-5" }, [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "form-control-plaintext",
+                              attrs: {
+                                type: "text",
+                                readonly: "",
+                                id: "staticEmail",
+                              },
+                            },
+                            [
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(pokemon.data.weight) +
+                                  "Kilos"
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("li", { staticClass: "list-group-item" }, [
+                      _c("div", { staticClass: "row" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-sm-7 col-form-label",
+                            attrs: { for: "staticEmail" },
+                          },
+                          [_vm._v("Abilidad Principal :")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-sm-5" }, [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "form-control-plaintext",
+                              attrs: {
+                                type: "text",
+                                readonly: "",
+                                id: "staticEmail",
+                              },
+                            },
+                            [
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(pokemon.data.abilities[0].ability.name)
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                    ]),
+                    _vm._v(" "),
+                    _c("li", { staticClass: "list-group-item" }, [
+                      _c("div", { staticClass: "row" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-sm-7 col-form-label",
+                            attrs: { for: "staticEmail" },
+                          },
+                          [_vm._v("tipos :\n              ")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-sm-5" }, [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "form-control-plaintext",
+                              attrs: {
+                                type: "text",
+                                readonly: "",
+                                id: "staticEmail",
+                              },
+                            },
+                            [
+                              _vm._v(
+                                "\n                  " +
+                                  _vm._s(pokemon.data.types[0].type.name) +
+                                  "\n                  " +
+                                  _vm._s(
+                                    pokemon.data.types.length == 2
+                                      ? ", " + pokemon.data.types[1].type.name
+                                      : ""
+                                  )
+                              ),
+                            ]
+                          ),
+                        ]),
+                      ]),
+                    ]),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("p", { staticClass: "card-text" }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "card-footer" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function ($event) {
+                              return _vm.addFavoritePokemon(pokemon.data.id)
+                            },
+                          },
+                        },
+                        [_c("i", { staticClass: "far fa-heart" })]
+                      ),
+                    ]),
+                  ]),
+                ]
+              ),
+            ]
+          )
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("nav", { attrs: { "aria-label": "..." } }, [
+          _c("ul", { staticClass: "pagination" }, [
+            _c("li", { staticClass: "page-item" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#", tabindex: "-1", "aria-disabled": "true" },
+                  on: { click: _vm.previousPagination },
+                },
+                [_vm._v("Previous")]
+              ),
             ]),
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "page-item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "page-link",
-                attrs: { href: "#" },
-                on: { click: _vm.nextPagination },
-              },
-              [_vm._v("Next")]
-            ),
+            _vm._v(" "),
+            _c("li", { staticClass: "page-item" }, [
+              _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                _vm._v(_vm._s(_vm.currentPage)),
+              ]),
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "page-item" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#" },
+                  on: { click: _vm.nextPagination },
+                },
+                [_vm._v("Next")]
+              ),
+            ]),
           ]),
         ]),
       ]),
-    ]),
-  ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

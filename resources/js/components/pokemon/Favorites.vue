@@ -29,7 +29,7 @@
             </b>
           </h5>
           <img
-            :src="pokemon.data.sprites.other.dream_world.front_default"
+            :src="pokemon.data.sprites.other['official-artwork'].front_default"
             class="card-img-top"
             style="height: 350px; width: 100%; border-radius: 5px"
             alt="..."
@@ -151,18 +151,21 @@
 </template>
 <script>
 export default {
-  data: () => ({ //establece variables locales en la vista
+  data: () => ({
+    //establece variables locales en la vista
     pokemones: {},
     currentPage: 1,
     currentUrl: "/api/get-favorites",
     nextUrl: "",
     previousUrl: "",
   }),
-  created() { //ejecuta un metodo al iniciar la vista
+  created() {
+    //ejecuta un metodo al iniciar la vista
     this.getPokemonsFavorites();
   },
   methods: {
-    async getPokemonsFavorites() {//obtiene todos los pokemon de la lista de favoritos
+    async getPokemonsFavorites() {
+      //obtiene todos los pokemon de la lista de favoritos
       let vectorPokemon = [];
 
       await this.axios
@@ -173,11 +176,12 @@ export default {
               this.nextUrl = res.data.data.next_page_url;
               this.previousUrl = res.data.data.prev_page_url;
               console.log(res.data.data);
-              res.data.data.data.forEach((item) => { //recorre la lista que obtuvo del back y solicita a la pai de pokemon por media del id mas informacion del pokemon 
+              res.data.data.data.forEach((item) => {
+                //recorre la lista que obtuvo del back y solicita a la pai de pokemon por media del id mas informacion del pokemon
                 this.axios
                   .get("https://pokeapi.co/api/v2/pokemon/" + item.pokemon_id)
                   .then((res2) => {
-                    vectorPokemon.push(res2);//guarda cada registro de pokemon en una lista temporal para asignarla a la lista principal y recorrerla en la vista
+                    vectorPokemon.push(res2); //guarda cada registro de pokemon en una lista temporal para asignarla a la lista principal y recorrerla en la vista
                   });
               });
             }
@@ -190,10 +194,10 @@ export default {
           console.log("error" + err);
         });
 
-      this.pokemones = vectorPokemon;//se guarda la lista en la lista global.
-      
+      this.pokemones = vectorPokemon; //se guarda la lista en la lista global.
     },
-    async deleteFavoritePokemon(idpokemon) {//elimina el registro de un favorito por medio del id del pokemon y dl usuario con sesion
+    async deleteFavoritePokemon(idpokemon) {
+      //elimina el registro de un favorito por medio del id del pokemon y dl usuario con sesion
       await this.axios
         .post("/api/delete-favorites", { pokemon_id: idpokemon })
         .then(
@@ -217,7 +221,8 @@ export default {
           console.log("error" + err);
         });
     },
-    nextPagination() {//se encarga de avanzar en la paginacion y mostrar mas registros
+    nextPagination() {
+      //se encarga de avanzar en la paginacion y mostrar mas registros
       if (this.nextUrl != null) {
         this.currentPage++;
 
@@ -225,7 +230,8 @@ export default {
         this.getPokemonsFavorites();
       }
     },
-    previousPagination() {//se encarga de retroceder en la paginacion y mostrar mas registros o registro previos
+    previousPagination() {
+      //se encarga de retroceder en la paginacion y mostrar mas registros o registro previos
       if (this.previousUrl != null) {
         this.currentPage--;
 

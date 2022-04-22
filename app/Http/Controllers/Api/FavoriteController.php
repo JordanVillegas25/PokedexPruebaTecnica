@@ -10,7 +10,7 @@ class FavoriteController extends Controller
     //metodo que obtiene los pokemones favoritos del usuario con sesion
     public function getFavorites(){
       
-        $favorite = Favorite::where("user_id", "=",auth()->user()->id)->paginate(20);
+        $favorite = Favorite::where("user_id", "=",auth()->user()->id)->paginate(6);
         return response()->json([
             "status" => 1,
             "data" =>$favorite

@@ -1,5 +1,19 @@
 <template>
-  <div>
+  <div class="row" style="margin-top: -15px">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-5">
+      <form class="d-flex" @submit.prevent="searchPokemon">
+        <input
+          class="form-control me-2"
+          v-model="form.search"
+          type="search"
+          placeholder="Nombre de pokemon o numero pokedex"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+      </form>
+    </div>
+    <div></div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div
         class="table--items products__list__item"
@@ -25,10 +39,10 @@
             </b>
           </h5>
           <img
-            :src="pokemon.data.sprites.other.dream_world.front_default"
+            :src="pokemon.data.sprites.other['official-artwork'].front_default"
             class="card-img-top"
             style="height: 350px; width: 100%; border-radius: 5px"
-            alt="..."
+            alt="Sin imagen en los registros"
           />
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
@@ -151,32 +165,39 @@ export default {
     pokemones: {},
     countPagination: 1,
     currentPage: 1,
-    currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0", //guarda la ruta principal de conexion a la api
+    currentUrl: "https://pokeapi.co/api/v2/pokemon/?limit=6&offset=0", //guarda la ruta principal de conexion a la api
     nextUrl: "",
     previousUrl: "",
+    form: {
+      search: "",
+    },
   }),
   created() {
     this.getPokemons();
   },
   methods: {
-    async getPokemons() { //conecta con la api y obtienelos registros de pokemon
+    async getPokemons() {
+      //conecta con la api y obtienelos registros de pokemon
       let vectorPokemon = [];
 
-      await this.axios.get(this.currentUrl).then((all) => {//ejecuta la conexion a la api con una url dinamica
+      await this.axios.get(this.currentUrl).then((all) => {
+        //ejecuta la conexion a la api con una url dinamica
         let { data } = all;
         this.nextUrl = data.next; //asigna las nuevas rutas siguientes y anteriores para la paginacion
         this.previousUrl = data.previous;
         //  console.log(this.pokemones);
-        data.results.forEach((item) => { //recorre cada pokemon de la lista principal y hace una nueva solicitud por los datos de cada pokemon
+        data.results.forEach((item) => {
+          //recorre cada pokemon de la lista principal y hace una nueva solicitud por los datos de cada pokemon
           this.axios.get(item.url).then((res2) => {
-            vectorPokemon.push(res2); //inserta los datos en una lista temporal 
+            vectorPokemon.push(res2); //inserta los datos en una lista temporal
           });
         });
       });
       this.pokemones = vectorPokemon;
       console.log(this.pokemones);
     },
-    async addFavoritePokemon(idpokemon) { //agrega un nuevo registro de favorito del cliente 
+    async addFavoritePokemon(idpokemon) {
+      //agrega un nuevo registro de favorito del cliente
       await this.axios
         .post("/api/register-favorites", { pokemon_id: idpokemon })
         .then(
@@ -208,7 +229,8 @@ export default {
           console.log("error" + err);
         });
     },
-    nextPagination() {//actualiza las rutas tanto la actual como la siguiente y la enterior
+    nextPagination() {
+      //actualiza las rutas tanto la actual como la siguiente y la enterior
       if (this.nextUrl != null) {
         this.currentPage++;
 
@@ -221,6 +243,32 @@ export default {
         this.currentPage--;
 
         this.currentUrl = this.previousUrl;
+        this.getPokemons();
+      }
+    },
+    async searchPokemon() {
+      let vectorPokemon = [];
+      if (this.form.search != "") {
+        await this.axios
+          .get(
+            "https://pokeapi.co/api/v2/pokemon/" +
+              this.form.search.toLowerCase()
+          )
+          .then((res) => {
+            vectorPokemon.push(res);
+            console.log(this.pokemones);
+            this.pokemones = vectorPokemon;
+          })
+          .catch((err) => {
+            Swal.fire({
+              position: "top-center",
+              icon: "info",
+              title: "Sin registros",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          });
+      } else {
         this.getPokemons();
       }
     },
