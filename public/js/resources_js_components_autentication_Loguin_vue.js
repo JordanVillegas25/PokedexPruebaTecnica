@@ -116,6 +116,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                     _this.$router.push("/"); //redirecciona al home al iniciar sesion
 
+
+                    //redirecciona al home al iniciar sesion
+                    window.location.reload();
                   } else {
                     Swal.fire({
                       icon: "error",

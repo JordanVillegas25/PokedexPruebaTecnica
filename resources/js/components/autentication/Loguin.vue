@@ -58,7 +58,8 @@
 </template>
 <script>
 export default {
-  data: () => ({//datos a nivel local que almacenan los datos de formulario para ser enviados al back para validar
+  data: () => ({
+    //datos a nivel local que almacenan los datos de formulario para ser enviados al back para validar
     user: {},
     form: {
       email: "",
@@ -66,7 +67,8 @@ export default {
     },
   }),
   methods: {
-    async login() {//metodo que envia los datos al back
+    async login() {
+      //metodo que envia los datos al back
       await this.axios
         .post("/api/login", this.form)
         .then(
@@ -83,6 +85,7 @@ export default {
                 timer: 1500,
               });
               this.$router.push("/"); //redirecciona al home al iniciar sesion
+              window.location.reload();
             } else {
               Swal.fire({
                 icon: "error",
@@ -91,16 +94,17 @@ export default {
               });
             }
           },
-          function (error) { //imprime los errores de formulario que el back encuentre
-              let temp="";
-              if(error.response.data.errors.email!=null)
-              temp+= error.response.data.errors.email + " ";
-              if(error.response.data.errors.password!=null)  
-              temp+= error.response.data.errors.password + " ";
+          function (error) {
+            //imprime los errores de formulario que el back encuentre
+            let temp = "";
+            if (error.response.data.errors.email != null)
+              temp += error.response.data.errors.email + " ";
+            if (error.response.data.errors.password != null)
+              temp += error.response.data.errors.password + " ";
             Swal.fire({
               icon: "error",
               title: "Error en credenciales",
-              text:temp
+              text: temp,
             });
           }
         )

@@ -2287,7 +2287,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (result) {
                   if (result.isConfirmed) {
                     _this.axios.get("/api/logout").then(function (res) {
-                      localStorage.removeItem("token"); //elimina lo stoken y encabezados
+                      localStorage.removeItem("token"); //elimina los token y encabezados
 
                       localStorage.setItem("token", "");
                       _this.token = "";
