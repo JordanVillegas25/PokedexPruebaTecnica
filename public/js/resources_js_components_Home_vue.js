@@ -196,7 +196,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   created: function created() {
-    this.getPokemons();
+    if (localStorage.getItem("token") == null || localStorage.getItem("token") == "") {
+      //verificacion de inicio de sesion
+      this.$router.push("/loguin");
+    } else {
+      this.getPokemons();
+    }
   },
   methods: {
     getPokemons: function getPokemons() {
